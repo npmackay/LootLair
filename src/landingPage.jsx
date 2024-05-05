@@ -20,7 +20,11 @@ function LandingPage() {
     );
     const data = await response.json();
     if (data.loginBool === true) {
-      setCurrentUser({ currentUser: username, userId: data.userId });
+      setCurrentUser({
+        currentUser: username,
+        userId: data.userId,
+        balance: data.balance,
+      });
       toast.success("Logged in successfully!");
       navigate("/homepage");
     } else {

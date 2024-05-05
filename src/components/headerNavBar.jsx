@@ -1,26 +1,31 @@
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
-import { useNavigate , useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CreatePostingModal from "../createPostingModal";
 import { useCurrentUser } from "../components/contexts/currentUserContext";
 function HeaderNavBar() {
   const [openCreatePosting, setOpenCreatePosting] = useState(false);
+  const { balance: userBalance } = useCurrentUser();
   const { currentUser: user } = useCurrentUser();
-   let location = useLocation();
+
+  let location = useLocation();
   let navigate = useNavigate();
-    useEffect(() => {
-      setCurrentPage(location.pathname);
-    }, [location]);
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, [location]);
   const handleLogout = () => {
     console.log("Logout");
     navigate("/");
   };
+
   const [currentPage, setCurrentPage] = useState("");
 
   return (
     <AppBar position="static">
       <Toolbar sx={{ display: "flex", justifyContent: "space-evenly" }}>
         <Typography variant="h4">Welcome {user?.currentUser} </Typography>
+        <Typography variant="h4">Balance: {user?.balance}</Typography>
+
         <Button color="inherit" onClick={() => navigate("/homepage")}>
           Homepage
         </Button>

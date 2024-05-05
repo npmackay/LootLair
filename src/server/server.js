@@ -28,6 +28,16 @@ db.run(
     }
   }
 );
+db.run(
+  "CREATE TABLE IF NOT EXISTS userBalance (id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, balance INTEGER, FOREIGN KEY(userId) REFERENCES users(id))",
+  (err) => {
+    if (err) {
+      return console.log(err.message);
+    } else {
+      console.log("userBalance Table created successfully");
+    }
+  }
+);
 
 db.run(
   `CREATE TABLE IF NOT EXISTS itemPostings(
@@ -48,6 +58,36 @@ db.run(
     }
   }
 );
+app.get("/getUserBalance/:userId", (req, res) => {
+  const { userId } = req.params;
+  db.get(
+    "SELECT balance FROM userBalance WHERE userId = ?",
+    [userId],
+    (err, row) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      res.send(row);
+    }
+  );
+});
+
+app.post("/createUserBalance", (req, res) => {
+  const { userId, balance } = req.body;
+  db.run(
+    "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
+    [userId, balance],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Failed to create user balance" });
+      } else {
+        console.log("User balance created successfully");
+        res.status(200).json({ message: "User balance created successfully" });
+      }
+    }
+  );
+});
 
 app.post("/createUser", (req, res) => {
   const { username, password } = req.body;
@@ -66,7 +106,24 @@ app.post("/createUser", (req, res) => {
           if (err) {
             return console.log(err.message);
           }
-          res.send({ message: "Added User" + username });
+          const userId = this.lastID;
+          db.run(
+            "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
+            [userId, 1000],
+            (err) => {
+              if (err) {
+                console.log(err.message);
+                res
+                  .status(500)
+                  .json({ message: "Failed to create user balance" });
+              } else {
+                console.log("User balance created successfully");
+                res
+                  .status(200)
+                  .json({ message: "User balance created successfully" });
+              }
+            }
+          );
         }
       );
     }
@@ -76,21 +133,32 @@ app.post("/createUser", (req, res) => {
 app.get("/login", (req, res) => {
   const { username, password } = req.query;
 
-  db.all(
+  db.get(
     `SELECT id FROM users WHERE username = ? AND password = ?`,
     [username, password],
-    (err, rows) => {
+    (err, row) => {
       if (err) {
         return console.log(err.message);
       }
-      if (rows.length > 0) {
-        res.send({
-          message: "Login successful",
-          loginBool: true,
-          userId: rows[0].id,
-        });
+      if (row) {
+        db.get(
+          "SELECT balance FROM userBalance WHERE userId = ?",
+          [row.id],
+          (err, balanceRow) => {
+            if (err) {
+              return console.log(err.message);
+            }
+            console.log(balanceRow.balance);
+            res.send({
+              loginBool: true,
+              userId: row.id,
+              username: username,
+              balance: balanceRow.balance,
+            });
+          }
+        );
       } else {
-        res.send({ message: "Login failed", loginBool: false });
+        res.send({ loginBool: false });
       }
     }
   );
@@ -110,7 +178,6 @@ app.get("/getItemPostings/:userId", (req, res) => {
     }
   );
 });
-
 
 app.post("/createItemPosting", (req, res) => {
   const { userId, title, description, price } = req.body;
