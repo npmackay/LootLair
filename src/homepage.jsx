@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 function Homepage() {
   const [itemPostings, setItemPostings] = useState([]);
 
+  
   const supportedGames = [
     { id: 1, name: "League of Legends", backgroundImg: "" },
     { id: 2, name: "Valorant", backgroundImg: "" },
