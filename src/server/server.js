@@ -5,7 +5,9 @@ const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
 const createTables = require("./tableCreation.js");
-const createExampleUserData = require("./testData/testUserData.js");
+// const createExampleUserData = require("./testData/testUserData.js");
+// const createMarketPlaceData = require("./testData/testMarketplaceData.js");
+const { getAllOtherUserItems } = require("./dbQueries/marketPlaceQueries");
 // Assuming `db` is your sqlite3 database instance
 
 app.use(
@@ -20,10 +22,12 @@ let db = new sqlite3.Database("./database.db", (err) => {
     return console.error(err.message);
   }
   console.log("Connected to the SQLite database.");
+  createTables(db);
 });
 
-createTables(db);
 // createExampleUserData(db);
+// createMarketPlaceData(db);
+
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;
   db.get(
@@ -133,16 +137,9 @@ app.get("/login", (req, res) => {
 app.get("/getItemPostings/:userId", (req, res) => {
   const { userId } = req.params;
 
-  db.all(
-    `SELECT * FROM itemPostings WHERE sellerId != ?`,
-    [userId],
-    (err, rows) => {
-      if (err) {
-        return console.log(err.message);
-      }
-      res.send(rows);
-    }
-  );
+  getAllOtherUserItems(db, userId).then((data) => {
+    res.send(data);
+  });
 });
 
 app.get("/getUserName/:userId", (req, res) => {
