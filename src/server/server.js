@@ -4,6 +4,10 @@ const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
+const createTables = require("./tableCreation.js");
+const createExampleUserData = require("./testData/testUserData.js");
+// Assuming `db` is your sqlite3 database instance
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -18,46 +22,8 @@ let db = new sqlite3.Database("./database.db", (err) => {
   console.log("Connected to the SQLite database.");
 });
 
-db.run(
-  "CREATE TABLE IF NOT EXISTS users( id integer PRIMARY KEY AUTOINCREMENT, username text, password text)",
-  (err) => {
-    if (err) {
-      return console.log(err.message);
-    } else {
-      console.log("users Table created successfully");
-    }
-  }
-);
-db.run(
-  "CREATE TABLE IF NOT EXISTS userBalance (id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, balance INTEGER, FOREIGN KEY(userId) REFERENCES users(id))",
-  (err) => {
-    if (err) {
-      return console.log(err.message);
-    } else {
-      console.log("userBalance Table created successfully");
-    }
-  }
-);
-
-db.run(
-  `CREATE TABLE IF NOT EXISTS itemPostings(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sellerId INTEGER,
-    itemStatus TEXT,
-    title TEXT,
-    description TEXT,
-    price TEXT,
-    datePosted DATE,
-    FOREIGN KEY(sellerId) REFERENCES users(id)
-  )`,
-  (err) => {
-    if (err) {
-      return console.log(err.message);
-    } else {
-      console.log("itemPostings Table created successfully");
-    }
-  }
-);
+createTables(db);
+// createExampleUserData(db);
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;
   db.get(

@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/MarketPlace" element={<MarketPlace />} />
-          <Route path="/profilePage" element={<ProfilePage />} />"
+          <Route path="/profilePage" element={<ProfilePage />} />
         </Routes>
       </Router>
     </CurrentUserProvider>

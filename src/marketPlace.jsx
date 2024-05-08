@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Typography, Paper, Grid, Box, Button } from "@mui/material";
 import { useCurrentUser } from "./components/contexts/currentUserContext";
 import HeaderNavBar from "./components/headerNavBar";
+
 function MarketPlace() {
   const URL = "http://localhost:3001";
   const { currentUser: user } = useCurrentUser();
