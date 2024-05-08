@@ -179,6 +179,15 @@ app.get("/getItemPostings/:userId", (req, res) => {
   );
 });
 
+app.get("/getUserName/:userId", (req, res) => {
+  const { userId } = req.params;
+  db.get(`SELECT username FROM users WHERE id = ?`, [userId], (err, row) => {
+    if (err) {
+      return console.log(err.message);
+    }
+    res.send(row);
+  });
+});
 app.post("/createItemPosting", (req, res) => {
   const { userId, title, description, price } = req.body;
   console.log(userId, title, description, price);

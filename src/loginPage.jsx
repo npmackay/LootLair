@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useCurrentUser } from "./components/contexts/currentUserContext";
-import "./landingPageCSS.css";
-function LandingPage() {
+import "./loginPage.css";
+function LoginPage() {
   const [openCreateAccount, setOpenCreateAccount] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +25,7 @@ function LandingPage() {
         userId: data.userId,
         balance: data.balance,
       });
+      localStorage.setItem("userId", data.userId);
       toast.success("Logged in successfully!");
       navigate("/homepage");
     } else {
@@ -81,7 +82,7 @@ function LandingPage() {
         <Paper
           sx={{
             borderRadius: 7,
-            backgroundColor: "#4D2DB7",
+            backgroundColor: "#1E0342",
             padding: 10,
             margin: "auto",
             maxWidth: 300,
@@ -104,6 +105,8 @@ function LandingPage() {
               label="Username"
               value={username}
               variant="outlined"
+              color="primary"
+              sx={{ width: "100%", color: "white" }}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
@@ -158,4 +161,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default LoginPage;
