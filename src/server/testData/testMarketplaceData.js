@@ -1,4 +1,3 @@
-
 function createMarketPlaceData(db) {
   let exampleData = [
     {
@@ -35,6 +34,36 @@ function createMarketPlaceData(db) {
       title: "World of Warcraft CLASSIC Gold THRALL",
       description: "1000 gold on THRALL server HORDE side",
       price: 20,
+      itemStatus: "available",
+    },
+
+    {
+      sellerId: 9,
+      title: "FN Dragon Lore",
+      description: "FN dragon lore 0.00151 float",
+      price: 100000,
+      itemStatus: "available",
+    },
+    {
+      sellerId: 9,
+      title: "MW Karambit Sapphire",
+      description: "MW Karambit Sapphire 0.07 float",
+      price: 30000,
+      itemStatus: "available",
+    },
+    {
+      sellerId: 9,
+      title: "MW Karambit Ruby",
+      description: "MW Karambit Ruby 0.07 float",
+      price: 30000,
+      itemStatus: "available",
+    },
+
+    {
+      sellerId: 9,
+      title: "FN Karambit Sapphire",
+      description: "FN Kara Sapphire 0.01 float",
+      price: 50000,
       itemStatus: "available",
     },
   ];

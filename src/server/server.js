@@ -7,6 +7,7 @@ const app = express();
 const createTables = require("./tableCreation.js");
 // const createExampleUserData = require("./testData/testUserData.js");
 // const createMarketPlaceData = require("./testData/testMarketplaceData.js");
+// const fillGamesTable = require("./dbQueries/supportedGames.js");
 const { getAllOtherUserItems } = require("./dbQueries/marketPlaceQueries");
 // Assuming `db` is your sqlite3 database instance
 
@@ -27,7 +28,7 @@ let db = new sqlite3.Database("./database.db", (err) => {
 
 // createExampleUserData(db);
 // createMarketPlaceData(db);
-
+// fillGamesTable(db);
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;
   db.get(
@@ -38,6 +39,21 @@ app.get("/getUserBalance/:userId", (req, res) => {
         return console.log(err.message);
       }
       res.send(row);
+    }
+  );
+});
+
+app.get("/marketplace/:game", (req, res) => {
+  const { game } = req.params.toLowerCase().replace(/_/g, "");
+  console.log(game);
+  db.all(
+    "SELECT itemPostings.*, users.username AS sellerName FROM itemPostings JOIN users ON itemPostings.sellerId = users.id WHERE gameId IN (SELECT id FROM games WHERE title = ?)",
+    game,
+    (err, rows) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      res.send(rows);
     }
   );
 });

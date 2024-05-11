@@ -15,26 +15,47 @@ function Homepage() {
   const [itemPostings, setItemPostings] = useState([]);
 
   const supportedGames = [
-    { id: 1, name: "League of Legends", backgroundImg: "" },
-    { id: 2, name: "Valorant", backgroundImg: "" },
-    { id: 3, name: "CS:GO", backgroundImg: "" },
-    { id: 4, name: "Overwatch", backgroundImg: "" },
-    { id: 5, name: "Rocket League", backgroundImg: "" },
-    { id: 6, name: "Fortnite", backgroundImg: "" },
-    { id: 7, name: "Hearthstone", backgroundImg: "" },
-    { id: 8, name: "Dota 2", backgroundImg: "" },
-    { id: 9, name: "Apex Legends", backgroundImg: "" },
-    { id: 10, name: "Rainbow Six Siege", backgroundImg: "" },
-    { id: 11, name: "World of Warcraft", backgroundImg: "" },
-    { id: 12, name: "Minecraft", backgroundImg: "" },
-    { id: 13, name: "Call of Duty", backgroundImg: "" },
-    { id: 14, name: "FIFA", backgroundImg: "" },
-    { id: 15, name: "NBA 2K", backgroundImg: "" },
-    { id: 16, name: "Madden", backgroundImg: "" },
-    { id: 17, name: "Super Smash Bros", backgroundImg: "" },
-    { id: 18, name: "Street Fighter", backgroundImg: "" },
-    { id: 19, name: "Tekken", backgroundImg: "" },
-    { id: 20, name: "Mortal Kombat", backgroundImg: "" },
+    {
+      id: 1,
+      name: "League of Legends",
+      backgroundImg:
+        "url(https://images.prismic.io/play-vs/6c423286e877921fb6659122b16e1845df833e1f_league-of-legends-hero-splash.jpg?auto=compress,format)",
+    },
+    {
+      id: 2,
+      name: "Valorant",
+      backgroundImg:
+        "url(https://www.dexerto.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.dexerto.com/wp-content/uploads/2022/11/11/Uninstall-Valorant.jpg)",
+    },
+    {
+      id: 3,
+      name: "CS2",
+      backgroundImg:
+        "url(https://cdn.akamai.steamstatic.com/apps/csgo/images/csgo_react/social/cs2.jpg)",
+    },
+    {
+      id: 4,
+      name: "Rocket League",
+      backgroundImg:
+        "url(https://media.graphassets.com/resize=fit:clip,height:1080,width:1920/output=format:webp/fLenQ7lsSMSTddNwQ1NA)",
+    },
+    {
+      id: 5,
+      name: "Fortnite",
+      backgroundImg:
+        "url(https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000010192/c7d855443d9ed9d8aa7638f548044a2987c7f22a6dab3136916fcc811039a64b)",
+    },
+    {
+      id: 6,
+      name: "Hearthstone",
+      backgroundImg:
+        "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzx1c7aYPLjzT--N2aVAp4xhSzfp-6Z0f-zowuG-4feg&s)",
+    },
+    { id: 7, name: "Escape From Tarkov", backgroundImg: "" },
+    { id: 8, name: "Rainbow Six Siege", backgroundImg: "" },
+    { id: 9, name: "World of Warcraft", backgroundImg: "" },
+    { id: 10, name: "FIFA", backgroundImg: "" },
+    { id: 11, name: "NBA 2K", backgroundImg: "" },
   ];
 
   return (
@@ -50,20 +71,6 @@ function Homepage() {
           height: "100vh",
         }}
       >
-        <Grid sx={{ justifyContent: "center" }} item xs={12}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Paper>
-              <Typography>My Current Listings</Typography>
-            </Paper>
-          </Box>
-        </Grid>
         <Grid item xs={12}>
           <Box
             sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
@@ -78,8 +85,30 @@ function Homepage() {
                 md={3}
                 lg={2}
               >
-                <Paper sx={{ width: "100%", height: "6rem" }} key={game.id}>
-                  {game.name}
+                <Paper
+                  sx={{
+                    width: "32rem",
+                    height: "15rem",
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), ${game.backgroundImg}`,
+                    backgroundSize: "cover",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  }}
+                  key={game.id}
+                >
+                  <Typography
+                    sx={{
+                      fontWeight: 900,
+                      fontSize: "1.5rem",
+                      color: "white",
+                      textShadow: "2px 2px 4px #000000",
+                    }}
+                  >
+                    {game.name}
+                  </Typography>
                 </Paper>
               </Grid>
             ))}

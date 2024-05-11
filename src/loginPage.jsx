@@ -101,12 +101,22 @@ function LoginPage() {
           </Typography>
           <Box marginBottom="0.75rem">
             <TextField
-              id="outlined-basic"
               label="Username"
               value={username}
               variant="outlined"
               color="primary"
-              sx={{ width: "100%", color: "white" }}
+              sx={{
+                color: "white",
+                "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "white",
+                },
+                "& .MuiFormLabel-root": {
+                  color: "white",
+                },
+              }}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
@@ -114,10 +124,21 @@ function LoginPage() {
           </Box>
           <Box marginBottom="0.75rem">
             <TextField
-              id="outlined-basic"
+              label="Password"
               value={password}
-              label="password"
               variant="outlined"
+              sx={{
+                color: "white",
+                "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "white",
+                },
+                "& .MuiFormLabel-root": {
+                  color: "white",
+                },
+              }}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}

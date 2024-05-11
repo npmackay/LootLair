@@ -62,6 +62,8 @@ function createTables(db) {
       itemStatus TEXT,
       created_at DATE,
       updated_at DATE,
+      gameId INTEGER,
+      FOREIGN KEY(gameId) REFERENCES games(id),
       FOREIGN KEY(sellerId) REFERENCES users(id)
     )`,
     (err) => {
@@ -69,6 +71,21 @@ function createTables(db) {
         return console.log(err.message);
       }
       console.log("itemPostings Table created successfully");
+    }
+  );
+
+  db.run(
+    `CREATE TABLE IF NOT EXISTS games(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      created_at DATE,
+      updated_at DATE
+    )`,
+    (err) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      console.log("games Table created successfully");
     }
   );
 

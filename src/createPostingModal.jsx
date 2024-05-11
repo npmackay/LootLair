@@ -14,10 +14,13 @@ function CreatePostingModal(props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: user?.userId,
+        sellerId: user.id,
         title: title,
         description: description,
         price: price,
+        itemStatus: "available",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       }),
     })
       .then((res) => res.json())

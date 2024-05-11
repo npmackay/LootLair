@@ -30,6 +30,25 @@ async function getAllUserItems(db, userId) {
   });
 }
 
+
+
+async function findItemPostingsByGame(db, game) {
+  return new Promise((resolve, reject) => {
+    db.all(
+      "SELECT itemPostings.*, users.username AS sellerName FROM itemPostings JOIN users ON itemPostings.sellerId = users.id WHERE gameId IN (SELECT id FROM games WHERE title = $1)",
+      game,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
+}
+
+
 async function purchaseItem(db, buyerId, sellerId, amount, transactionType) {
   return new Promise((resolve, reject) => {
     db.run(
