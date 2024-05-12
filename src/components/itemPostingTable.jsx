@@ -6,9 +6,9 @@ import {
   TableCell,
   IconButton,
 } from "@mui/material";
-
+import PurchaseItemModal from "./purchaseItemModal";
 import { FaGavel } from "react-icons/fa";
-
+import { useState } from "react";
 function createTableCell(item, key) {
   return (
     <TableCell
@@ -22,6 +22,8 @@ function createTableCell(item, key) {
   );
 }
 export default function ItemPostingTable({ items }) {
+  const [openPurchaseItemModal, setOpenPurchaseItemModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   return (
     <Table sx={{ backgroundColor: "white" }}>
       <TableHead>
@@ -86,17 +88,31 @@ export default function ItemPostingTable({ items }) {
             (key) => createTableCell(item, key)
           )}
 
-          <IconButton>
-            <FaGavel
-              style={{
-                color: "#0e0e0f",
-
-                transform: "rotate(270deg)",
+          <TableCell>
+            <IconButton
+              onClick={() => {
+                console.log("clicked");
+                setOpenPurchaseItemModal(true);
+                setSelectedItem(item);
               }}
-            />
-          </IconButton>
+            >
+              <FaGavel
+                style={{
+                  color: "#0e0e0f",
+                  transform: "rotate(270deg)",
+                }}
+              />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))}
+      {openPurchaseItemModal && (
+        <PurchaseItemModal
+          purchaseData={selectedItem}
+          open={openPurchaseItemModal}
+          handleClose={() => setOpenPurchaseItemModal(false)}
+        />
+      )}
     </Table>
   );
 }
