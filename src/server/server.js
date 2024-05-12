@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const sqlite3 = require("sqlite3").verbose();
+const bcrypt = require("bcrypt");
 
 const app = express();
 const createTables = require("./tableCreation.js");
@@ -75,74 +76,85 @@ app.post("/createUserBalance", (req, res) => {
   );
 });
 
-app.post("/createUser", (req, res) => {
+app.post("/createUser", async (req, res) => {
   const { username, password } = req.body;
 
-  db.get(`SELECT id FROM users WHERE username = ?`, [username], (err, row) => {
-    if (err) {
-      return console.log(err.message);
-    }
-    if (row) {
-      res.send({ message: "user already exists" });
-    } else {
-      db.run(
-        `INSERT INTO users( username, password) VALUES(?,?)`,
-        [username, password],
-        function (err) {
-          if (err) {
-            return console.log(err.message);
-          }
-          const userId = this.lastID;
-          db.run(
-            "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
-            [userId, 1000],
-            (err) => {
-              if (err) {
-                console.log(err.message);
-                res
-                  .status(500)
-                  .json({ message: "Failed to create user balance" });
-              } else {
-                console.log("User balance created successfully");
-                res
-                  .status(200)
-                  .json({ message: "User balance created successfully" });
-              }
-            }
-          );
-        }
-      );
-    }
-  });
-});
-
-app.get("/login", (req, res) => {
-  const { username, password } = req.query;
-
   db.get(
-    `SELECT id FROM users WHERE username = ? AND password = ?`,
-    [username, password],
-    (err, row) => {
+    `SELECT id FROM users WHERE username = ?`,
+    [username],
+    async (err, row) => {
       if (err) {
         return console.log(err.message);
       }
       if (row) {
-        db.get(
-          "SELECT balance FROM userBalance WHERE userId = ?",
-          [row.id],
-          (err, balanceRow) => {
+        res.send({ message: "user already exists" });
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        db.run(
+          `INSERT INTO users( username, password) VALUES(?,?)`,
+          [username, hashedPassword],
+          function (err) {
             if (err) {
               return console.log(err.message);
             }
-            console.log(balanceRow.balance);
-            res.send({
-              loginBool: true,
-              userId: row.id,
-              username: username,
-              balance: balanceRow.balance,
-            });
+            const userId = this.lastID;
+            db.run(
+              "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
+              [userId, 1000],
+              (err) => {
+                if (err) {
+                  console.log(err.message);
+                  res
+                    .status(500)
+                    .json({ message: "Failed to create user balance" });
+                } else {
+                  console.log("User balance created successfully");
+                  res
+                    .status(200)
+                    .json({ message: "User balance created successfully" });
+                }
+              }
+            );
           }
         );
+      }
+    }
+  );
+});
+
+app.get("/login", async (req, res) => {
+  const { username, password } = req.query;
+
+  db.get(
+    `SELECT id, password FROM users WHERE username = ?`,
+    [username],
+    async (err, row) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      if (row) {
+        const match = await bcrypt.compare(password, row.password);
+        console.log(match);
+        if (match) {
+          db.get(
+            "SELECT balance FROM userBalance WHERE userId = ?",
+            [row.id],
+            (err, balanceRow) => {
+              if (err) {
+                return console.log(err.message);
+              }
+              console.log(balanceRow.balance);
+              res.send({
+                loginBool: true,
+                userId: row.id,
+                username: username,
+                balance: balanceRow.balance,
+              });
+            }
+          );
+        } else {
+          res.send({ loginBool: false });
+        }
       } else {
         res.send({ loginBool: false });
       }
