@@ -3,15 +3,15 @@ import { useCurrentUser } from "./contexts/currentUserContext";
 function PurchaseItemModal({ purchaseData, open, handleClose }) {
   console.log("purchaseData", purchaseData);
   const { currentUser: user } = useCurrentUser();
-
   const handlePurchase = async () => {
     console.log("Purchase Item");
-    const buyerId = user.id;
+    console.log(user);
+    const buyerId = user.userId;
     const sellerId = purchaseData.sellerId;
     const amount = purchaseData.price;
     const transactionType = "purchase";
     try {
-      const response = await fetch("/api/purchaseItem", {
+      const response = await fetch("http://localhost:3001/testRoute", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,13 +22,13 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       // If you need to do something with the response, you can do it here.
       const data = await response.json();
     } catch (error) {
       console.error("An error occurred while purchasing the item:", error);
     }
   };
+
   return (
     <Modal
       sx={{
@@ -66,7 +66,7 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
               <Typography sx={{ color: "white" }}>
                 Item Price: {purchaseData.price}
               </Typography>
-              <Button onClick={handlePurchase}>Purchase</Button>
+              <Button onClick={() => handlePurchase()}>Purchase</Button>
               <Button onClick={handleClose}>Close</Button>
             </Paper>
           </Grid>

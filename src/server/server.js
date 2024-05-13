@@ -59,6 +59,42 @@ app.get("/marketplace/:game", (req, res) => {
   );
 });
 
+app.post("/testRoute", (req, res) => {
+  const { buyerId, sellerId, amount, transactionType } = req.body;
+  console.log("purchaseItem hit"); ``
+   console.log("purchaseItem route hit");
+  db.run(
+    `INSERT INTO transactions(buyerId, sellerId, amount, transaction_type, created_at) VALUES(?, ?, ?, ?, datetime('now'))`,
+    [buyerId, sellerId, amount, transactionType],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Failed to create transaction" });
+      }
+    }
+  );
+  db.run(
+    `UPDATE userBalance SET balance = balance - ? WHERE userId = ?`,
+    [amount, buyerId],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Failed to update buyer balance" });
+      }
+    }
+  );
+  db.run(
+    `UPDATE userBalance SET balance = balance + ? WHERE userId = ?`,
+    [amount, sellerId],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Failed to update seller balance" });
+      }
+    }
+  );
+  res.status(200).json({ message: "Transaction successful" });
+});
 app.post("/createUserBalance", (req, res) => {
   const { userId, balance } = req.body;
   db.run(
