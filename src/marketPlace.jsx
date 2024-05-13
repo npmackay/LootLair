@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography, Paper, Grid, Box, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useCurrentUser } from "./components/contexts/currentUserContext";
 import HeaderNavBar from "./components/headerNavBar";
 import ItemPostingTable from "./components/itemPostingTable";

@@ -7,6 +7,7 @@ import MarketPlace from "./marketPlace";
 import ProfilePage from "./profilePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./global.css";
 import { CurrentUserProvider } from "./components/contexts/currentUserContext";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
