@@ -8,8 +8,29 @@ import {
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import { GiTwoCoins } from "react-icons/gi";
-
+import { useState } from "react";
+import { useCurrentUser } from "./components/contexts/currentUserContext";
 function AddBalanceModal({ open, handleClose }) {
+  const [increaseBalanceAmount, setIncreaseBalanceAmount] = useState(0);
+  const { currentUser: user } = useCurrentUser();
+  console.log(user);
+  function handleAddBalance() {
+    console.log(user);
+    fetch("http://localhost:3001/addBalance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.userId,
+        amount: increaseBalanceAmount,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  }
   return (
     <Modal
       sx={{
@@ -40,6 +61,9 @@ function AddBalanceModal({ open, handleClose }) {
             <TextField
               id="outlined-adornment-amount"
               variant="outlined"
+              onChange={(e) => {
+                setIncreaseBalanceAmount(e.target.value);
+              }}
               InputProps={{
                 startAdornment: <GiTwoCoins />,
               }}
@@ -71,6 +95,7 @@ function AddBalanceModal({ open, handleClose }) {
             }}
             variant="contained"
             color="primary"
+            onClick={handleAddBalance}
           >
             Add Balance
           </Button>

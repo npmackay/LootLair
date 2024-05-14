@@ -59,10 +59,43 @@ app.get("/marketplace/:game", (req, res) => {
   );
 });
 
-app.post("/testRoute", (req, res) => {
+app.post("/addBalance", (req, res) => {
+  const { userId, amount } = req.body;
+  console.log(userId, amount);
+  console.log("addBalance hit");
+  db.run(
+    `UPDATE userBalance SET balance = balance + ? WHERE userId = ?`,
+    [amount, userId],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Failed to update balance" });
+      } else {
+        db.get(
+          "SELECT balance FROM userBalance WHERE userId = ?",
+          [userId],
+          (err, row) => {
+            if (err) {
+              return console.log(err.message);
+            }
+            // Check if row is not undefined before accessing row.balance
+            if (row) {
+              res.status(200).json({ userId, balance: row.balance });
+            } else {
+              res.status(404).json({ message: "User not found" });
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
+app.post("/purchaseItem", (req, res) => {
   const { buyerId, sellerId, amount, transactionType } = req.body;
-  console.log("purchaseItem hit"); ``
-   console.log("purchaseItem route hit");
+  console.log("purchaseItem hit");
+
+  console.log("purchaseItem route hit");
   db.run(
     `INSERT INTO transactions(buyerId, sellerId, amount, transaction_type, created_at) VALUES(?, ?, ?, ?, datetime('now'))`,
     [buyerId, sellerId, amount, transactionType],

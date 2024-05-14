@@ -3,6 +3,7 @@
 ## Entities
 
 ### Users
+
 - id (Primary Key)
 - username
 - email
@@ -11,6 +12,7 @@
 - updated_at
 
 ### UserBalance
+
 - id (Primary Key)
 - userId (Foreign Key references Users.id)
 - balance
@@ -18,6 +20,7 @@
 - updated_at
 
 ### Transactions
+
 - id (Primary Key)
 - buyerId (Foreign Key references Users.id)
 - sellerId (Foreign Key references Users.id)
@@ -26,6 +29,7 @@
 - created_at
 
 ### ItemPostings
+
 - id (Primary Key)
 - sellerId (Foreign Key references Users.id)
 - title
@@ -36,6 +40,7 @@
 - updated_at
 
 ### ItemImages
+
 - id (Primary Key)
 - itemId (Foreign Key references ItemPostings.id)
 - image_url
