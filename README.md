@@ -17,8 +17,10 @@ LootLair is built using a combination of popular and powerful libraries and fram
 
 - `Express`: A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It's used in server.js to manage server-side logic.
 - `SQLite`: A C library that provides a lightweight disk-based database. It allows interacting with the database using a nonstandard variant of the SQL query language. It's used in tableCreation.js and marketPlaceQueries.js to manage the application's data.
-- The `bcrypt` library is a popular password hashing function that is commonly used for securely storing passwords.
+- `bcrypt` is a popular password hashing function that is commonly used for securely storing passwords.
   It provides a way to hash passwords using a salt and a cost factor, making it resistant to brute-force attacks.
+- `morgan` : is a middleware for Node.js/Express applications that logs HTTP requests.
+  It provides a simple and customizable logging format, allowing you to track and analyze incoming requests.
 
 ### Development
 
