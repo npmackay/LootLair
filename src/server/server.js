@@ -11,7 +11,13 @@ const createTables = require("./tableCreation.js");
 // const fillGamesTable = require("./dbQueries/supportedGames.js");
 const { getAllOtherUserItems } = require("./dbQueries/marketPlaceQueries");
 // Assuming `db` is your sqlite3 database instance
+const morgan = require("morgan");
+morgan.token("route_and_time", function (req, res, tokens) {
+  return `${req.path} ${tokens["response-time"](req, res)} ms`;
+});
+// Use morgan middleware with 'combined' preset which includes response time
 
+app.use(morgan(":url :response-time ms"));
 app.use(
   cors({
     origin: "http://localhost:5173",

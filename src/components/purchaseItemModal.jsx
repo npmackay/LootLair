@@ -6,27 +6,7 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
   const handlePurchase = async () => {
     console.log("Purchase Item");
     console.log(user);
-    const buyerId = user.userId;
-    const sellerId = purchaseData.sellerId;
-    const amount = purchaseData.price;
-    const transactionType = "purchase";
-    try {
-      const response = await fetch("http://localhost:3001/testRoute", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ buyerId, sellerId, amount, transactionType }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      // If you need to do something with the response, you can do it here.
-      const data = await response.json();
-    } catch (error) {
-      console.error("An error occurred while purchasing the item:", error);
-    }
+    console.log(purchaseData);
   };
 
   return (
@@ -51,7 +31,6 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-
                 width: "32rem",
                 height: "37rem",
                 backgroundColor: "#0e0e0f",
