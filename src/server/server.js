@@ -17,6 +17,19 @@ morgan.token("route_and_time", function (req, res, tokens) {
 });
 // Use morgan middleware with 'combined' preset which includes response time
 
+const multer = require("multer");
+const path = require("path");
+
+// Set up multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./src/LootLairStorage/userProfilePicture");
+  },
+  filename: function (req, file, cb) {
+    cb(null, req.body.userId + "pp" + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
 app.use(morgan(":url :response-time ms"));
 app.use(
   cors({
@@ -245,6 +258,50 @@ app.get("/getItemPostings/:userId", (req, res) => {
   });
 });
 
+app.post(
+  "/uploadProfilePicture",
+  upload.single("profilePicture"),
+  (req, res) => {
+    // req.file is the `profilePicture` file
+    // req.body will hold the text fields, if there were any
+
+    // Save the file path to the database
+    const filePath = path.join(
+      "src",
+      "LootLairStorage",
+      "userProfilePicture",
+      req.file.filename
+    );
+
+    // Save the file path to the profilePictures table
+    db.run(
+      `INSERT INTO profilePictures(userId, image_route, created_at, updated_at) VALUES(?, ?, datetime('now'), datetime('now'))`,
+      [req.body.userId, filePath],
+      function (err) {
+        if (err) {
+          return console.log(err.message);
+        }
+        res.send("Profile picture uploaded and saved successfully");
+      }
+    );
+  }
+);
+
+app.get("/getProfilePicture/:userId", (req, res) => {
+  const { userId } = req.params;
+  db.get(
+    `SELECT image_route FROM profilePictures WHERE userId = ?`,
+    [userId],
+    (err, row) => {
+      if (err) {
+        return console.log(err.message);
+      } else {
+        const filePath = row.image_route;
+        res.sendFile(filePath);
+      }
+    }
+  );
+});
 app.get("/getUserName/:userId", (req, res) => {
   const { userId } = req.params;
   db.get(`SELECT username FROM users WHERE id = ?`, [userId], (err, row) => {
@@ -255,16 +312,16 @@ app.get("/getUserName/:userId", (req, res) => {
   });
 });
 app.post("/createItemPosting", (req, res) => {
-  const { userId, title, description, price } = req.body;
-  console.log(userId, title, description, price);
+  const { sellerId, title, description, price } = req.body;
+  console.log(sellerId, title, description, price);
 
   db.run(
-    `INSERT INTO itemPostings( sellerId, itemStatus, title, description, price, datePosted) VALUES(?,'available', ?, ? , ?,datetime('now'))`,
-    [userId, title, description, price],
+    `INSERT INTO itemPostings( sellerId, itemStatus, title, description, price, created_at) VALUES(?,'available', ?, ? , ?,datetime('now'))`,
+    [sellerId, title, description, price],
     function (err) {
       if (err) {
         console.log("Failed parameters:", {
-          userId,
+          sellerId,
           title,
           description,
           price,

@@ -21,6 +21,7 @@ LootLair is built using a combination of popular and powerful libraries and fram
   It provides a way to hash passwords using a salt and a cost factor, making it resistant to brute-force attacks.
 - `morgan` : is a middleware for Node.js/Express applications that logs HTTP requests.
   It provides a simple and customizable logging format, allowing you to track and analyze incoming requests.
+- `multer`: A middleware for handling multipart/form-data, primarily used for uploading files in Node.js applications. It provides an easy way to handle file uploads, including handling file size limits, file type validation, and storing files on the server.
 
 ### Development
 

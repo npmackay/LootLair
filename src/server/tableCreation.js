@@ -53,6 +53,16 @@ function createTables(db) {
   );
 
   db.run(
+    `CREATE TABLE IF NOT EXISTS profilePictures(id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, 
+      image_route TEXT, created_at DATE, updated_at DATE, FOREIGN KEY(userId) REFERENCES users(id))`,
+    (err) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      console.log("profilePictures Table created successfully");
+    }
+  );
+  db.run(
     `CREATE TABLE IF NOT EXISTS itemPostings(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       sellerId INTEGER,

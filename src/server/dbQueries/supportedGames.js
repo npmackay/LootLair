@@ -11,8 +11,7 @@ function fillGamesTable(db) {
                 ("Escape From Tarkov", datetime("now"), datetime("now")),
                 ("Fortnite", datetime("now"), datetime("now")),
                 ("Hearthstone", datetime("now"), datetime("now")),
-                ("Rainbow Six Seige" , datetime("now"), datetime("now")),
-                ("FIFA", datetime("now"), datetime("now"))
+              
         `);
   // Add more games as needed
   // Add more games as needed

@@ -1,4 +1,12 @@
-import { Grid, Paper, Typography, TextField, Box } from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Box,
+  IconButton,
+} from "@mui/material";
+import { FaUpload } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import HeaderNavBar from "./components/headerNavBar";
 import { useCurrentUser } from "./components/contexts/currentUserContext";
@@ -6,6 +14,36 @@ import { useCurrentUser } from "./components/contexts/currentUserContext";
 function ProfilePage() {
   const { currentUser } = useCurrentUser();
   const [user, setUser] = useState(currentUser);
+
+  async function uploadUserProfilePicture() {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("profilePicture", file);
+
+      // Send the image file to your server
+      const response = await fetch("/uploadProfilePicture", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // If the upload was successful, update the user's profile picture in the state
+        const data = await response.json();
+        setUser((prevUser) => ({
+          ...prevUser,
+          profilePicture: data.profilePicture,
+        }));
+      } else {
+        console.error("Failed to upload profile picture");
+      }
+    };
+
+    fileInput.click();
+  }
 
   return (
     <>
@@ -58,6 +96,30 @@ function ProfilePage() {
               />
             </Box>
             {/* Add more fields as needed */}
+            <Grid
+              item
+              xs={12}
+              sx={{ justifyContent: "center", display: "flex" }}
+            >
+              <Paper>
+                <Typography variant="h4">Public Profile</Typography>
+                <Box
+                  component="img"
+                  alt="profile picture"
+                  src={user?.profilePicture}
+                  sx={{ width: "10rem", height: "10rem" }}
+                ></Box>
+                <IconButton
+                  onClick={() => {
+                    uploadUserProfilePicture();
+                  }}
+                >
+                  <FaUpload />
+                </IconButton>
+
+                <Typography>Username : {user?.username}</Typography>
+              </Paper>
+            </Grid>
           </Paper>
         </Grid>
       </Grid>

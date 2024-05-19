@@ -51,11 +51,19 @@ function Homepage() {
       backgroundImg:
         "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzx1c7aYPLjzT--N2aVAp4xhSzfp-6Z0f-zowuG-4feg&s)",
     },
-    { id: 7, name: "Escape From Tarkov", backgroundImg: "" },
-    { id: 8, name: "Rainbow Six Siege", backgroundImg: "" },
-    { id: 9, name: "World of Warcraft", backgroundImg: "" },
-    { id: 10, name: "FIFA", backgroundImg: "" },
-    { id: 11, name: "NBA 2K", backgroundImg: "" },
+    {
+      id: 7,
+      name: "Escape From Tarkov",
+      backgroundImg:
+        "url(https://assetsio.gnwcdn.com/escape-from-tarkov-rogue-boss-knight.jpg?width=1600&height=900&fit=crop&quality=100&format=png&enable=upscale&auto=webp)",
+    },
+
+    {
+      id: 9,
+      name: "World of Warcraft",
+      backgroundImg:
+        "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZZLQndzGAT2c9fPdIRjdmWog8jXkuNZKHY9LliX6HiA&s)",
+    },
   ];
 
   return (
@@ -80,10 +88,7 @@ function Homepage() {
                 sx={{ display: "flex", padding: "0.5rem" }}
                 key={index}
                 item
-                xs={6}
-                sm={4}
-                md={3}
-                lg={2}
+                xs={3}
               >
                 <Paper
                   sx={{

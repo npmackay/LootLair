@@ -8,13 +8,14 @@ function CreatePostingModal(props) {
   const { currentUser: user } = useCurrentUser();
   function submitPosting() {
     console.log("submitting posting");
+    console.log(user);
     fetch("http://localhost:3001/createItemPosting", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sellerId: user.id,
+        sellerId: user.userId,
         title: title,
         description: description,
         price: price,
