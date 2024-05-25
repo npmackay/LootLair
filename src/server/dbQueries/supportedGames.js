@@ -1,6 +1,6 @@
 function fillGamesTable(db) {
   db.run(`
-        INSERT INTO games (name, created_at, updated_at)
+        INSERT INTO games (title, created_at, updated_at)
         VALUES 
                 ("League of Legends", datetime("now"), datetime("now")),
                 ("Valorant", datetime("now"), datetime("now")),
@@ -10,10 +10,8 @@ function fillGamesTable(db) {
                 ("World of Warcraft", datetime("now"), datetime("now")),
                 ("Escape From Tarkov", datetime("now"), datetime("now")),
                 ("Fortnite", datetime("now"), datetime("now")),
-                ("Hearthstone", datetime("now"), datetime("now")),
-              
-        `);
-  // Add more games as needed
+                ("Hearthstone", datetime("now"), datetime("now"))
+    `);
   // Add more games as needed
 }
 

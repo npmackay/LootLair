@@ -42,16 +42,20 @@ function CreatePostingModal(props) {
           position: "absolute",
           top: "50%",
           left: "50%",
+
           transform: "translate(-50%, -50%)",
           width: 400,
           bgcolor: "background.paper",
           boxShadow: 24,
+
           p: 4,
         }}
       >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create Posting
-        </Typography>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create Posting
+          </Typography>
+        </div>
         <TextField
           id="outlined-basic"
           label="Title"
@@ -78,7 +82,7 @@ function CreatePostingModal(props) {
         />
         <Button
           variant="contained"
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, backgroundColor: "#1E0342" }}
           fullWidth
           onClick={submitPosting}
         >

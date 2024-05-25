@@ -22,7 +22,6 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
       onClose={handleClose}
     >
       <Box>
-        <Typography variant="h6">Purchase Details</Typography>
         <Grid sx={{}} container>
           <Grid item>
             <Paper
@@ -36,6 +35,7 @@ function PurchaseItemModal({ purchaseData, open, handleClose }) {
                 backgroundColor: "#0e0e0f",
               }}
             >
+              <Typography variant="h6">Purchase Details</Typography>w
               <Typography sx={{ color: "white" }}>
                 Item Name: {purchaseData.title}
               </Typography>

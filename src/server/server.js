@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const sqlite3 = require("sqlite3").verbose();
 const bcrypt = require("bcrypt");
-
+var validator = require("validator");
 const app = express();
 const createTables = require("./tableCreation.js");
 // const createExampleUserData = require("./testData/testUserData.js");
@@ -48,7 +48,7 @@ let db = new sqlite3.Database("./database.db", (err) => {
 
 // createExampleUserData(db);
 // createMarketPlaceData(db);
-// fillGamesTable(db);
+
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;
   db.get(
@@ -62,6 +62,7 @@ app.get("/getUserBalance/:userId", (req, res) => {
     }
   );
 });
+// fillGamesTable(db);
 
 app.get("/marketplace/:game", (req, res) => {
   const { game } = req.params.toLowerCase().replace(/_/g, "");
@@ -149,6 +150,11 @@ app.post("/purchaseItem", (req, res) => {
 });
 app.post("/createUserBalance", (req, res) => {
   const { userId, balance } = req.body;
+  validator.isNumeric(userId);
+  validator.isNumeric(balance);
+  validator.isInt(userId);
+  validator.isInt(balance);
+
   db.run(
     "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
     [userId, balance],
@@ -167,47 +173,56 @@ app.post("/createUserBalance", (req, res) => {
 app.post("/createUser", async (req, res) => {
   const { username, password } = req.body;
 
-  db.get(
-    `SELECT id FROM users WHERE username = ?`,
-    [username],
-    async (err, row) => {
-      if (err) {
-        return console.log(err.message);
-      }
-      if (row) {
-        res.send({ message: "user already exists" });
-      } else {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        db.run(
-          `INSERT INTO users( username, password) VALUES(?,?)`,
-          [username, hashedPassword],
-          function (err) {
-            if (err) {
-              return console.log(err.message);
-            }
-            const userId = this.lastID;
-            db.run(
-              "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
-              [userId, 1000],
-              (err) => {
-                if (err) {
-                  console.log(err.message);
-                  res
-                    .status(500)
-                    .json({ message: "Failed to create user balance" });
-                } else {
-                  console.log("User balance created successfully");
-                  res
-                    .status(200)
-                    .json({ message: "User balance created successfully" });
-                }
+  if (
+    validator.isAlphanumeric(username) ||
+    validator.isAlphanumeric(password) ||
+    validator.isLength(username, { min: 3, max: 20 }) ||
+    validator.isLength(password, { min: 3, max: 20 })
+  ) {
+    db.get(
+      `SELECT id FROM users WHERE username = ?`,
+      [username],
+      async (err, row) => {
+        if (err) {
+          return console.log(err.message);
+        }
+        if (row) {
+          res.send({ message: "user already exists" });
+        } else {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          db.run(
+            `INSERT INTO users( username, password) VALUES(?,?)`,
+            [username, hashedPassword],
+            function (err) {
+              if (err) {
+                return console.log(err.message);
               }
-            );
-          }
-        );
+              const userId = this.lastID;
+              db.run(
+                "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
+                [userId, 1000],
+                (err) => {
+                  if (err) {
+                    console.log(err.message);
+                    res
+                      .status(500)
+                      .json({ message: "Failed to create user balance" });
+                  } else {
+                    console.log("User balance created successfully");
+                    res
+                      .status(200)
+                      .json({ message: "User balance created successfully" });
+                  }
+                }
+              );
+            }
+          );
+        }
       }
-    }
-  );
+    );
+  } else {
+    res.send({ message: "Invalid username or password" });
+  }
 });
 
 app.get("/login", async (req, res) => {
@@ -264,7 +279,7 @@ app.post(
   (req, res) => {
     // req.file is the `profilePicture` file
     // req.body will hold the text fields, if there were any
-
+    console.log("hit here");
     // Save the file path to the database
     const filePath = path.join(
       "src",

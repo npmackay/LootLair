@@ -14,36 +14,62 @@ import { useCurrentUser } from "./components/contexts/currentUserContext";
 function ProfilePage() {
   const { currentUser } = useCurrentUser();
   const [user, setUser] = useState(currentUser);
-
+  const URL = "http://localhost:3001";
   async function uploadUserProfilePicture() {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
     fileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append("profilePicture", file);
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+        formData.append("userId", JSON.stringify({ userId: currentUser.id }));
 
-      // Send the image file to your server
-      const response = await fetch("/uploadProfilePicture", {
-        method: "POST",
-        body: formData,
-      });
+        // Send the image file to your server
+        const response = await fetch(URL + "/uploadProfilePicture", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (response.ok) {
-        // If the upload was successful, update the user's profile picture in the state
-        const data = await response.json();
-        setUser((prevUser) => ({
-          ...prevUser,
-          profilePicture: data.profilePicture,
-        }));
+        if (response.ok) {
+          // If the upload was successful, update the user's profile picture in the state
+          const data = await response.json();
+          setUser((prevUser) => ({
+            ...prevUser,
+            profilePicture: data.profilePicture,
+          }));
+        } else {
+          console.error("Failed to upload profile picture");
+        }
       } else {
-        console.error("Failed to upload profile picture");
+        console.error("No file selected for upload");
       }
     };
 
     fileInput.click();
   }
+
+  useEffect(() => {
+    async function fetchUserProfilePicture() {
+      let userProfilePictureSrc = await fetch(
+        URL + `/getUserProfilePicture?${user.userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((response) => response.json());
+      userProfilePictureSrc.then((data) => {
+        setUser((prevUser) => ({
+          ...prevUser,
+          profilePicture: data.profilePicture,
+        }));
+      });
+    }
+    fetchUserProfilePicture();
+  }, [currentUser]);
 
   return (
     <>
@@ -116,8 +142,6 @@ function ProfilePage() {
                 >
                   <FaUpload />
                 </IconButton>
-
-                <Typography>Username : {user?.username}</Typography>
               </Paper>
             </Grid>
           </Paper>

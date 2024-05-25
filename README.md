@@ -28,6 +28,7 @@ LootLair is built using a combination of popular and powerful libraries and fram
 - `Vite`: A build tool that aims to provide a faster and leaner development experience for modern web projects. It's used for building the project as specified in the package.json file.
 - `ESLint`: A tool for identifying and reporting on patterns found in ECMAScript/JavaScript code. It's used to maintain code quality.
 - `Nodemon`: A utility that will monitor for any changes in your source and automatically restart your server. It's used for improving the development experience.
+- `Validator`: A powerful npm package that provides a set of validation functions for validating various types of data, such as strings, numbers, emails, URLs, and more. It's commonly used in web applications to ensure that user input meets specific criteria and is valid before processing or storing it.
 
 ## Getting Started
 
