@@ -101,6 +101,10 @@ function Homepage() {
                     alignItems: "center",
                     cursor: "pointer",
                     backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    transition: "box-shadow 0.3s ease-in-out", // Add this line for a smooth transition
+                    ":hover": {
+                      boxShadow: "0 0 10px 5px #51189e", // Add this line for the glow effect on hover
+                    },
                   }}
                   key={game.id}
                 >

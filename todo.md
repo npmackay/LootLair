@@ -1,25 +1,13 @@
-# To-Do List
+# LootLair To-Do List
 
-## Task 1
+## Home Page Routing
 
-- [ ] persistent user info after refresh
-  - [ ] Look into local storage with token
-  - [ ] Outline
-  - [ ] Gather resources
-- [ ] Plan task 1
+- [ ] Homepage image button filters marketplace by game
+  - [ ] add routing to buttons to marketplace page
+  - [ ] add filter query param for name of game
 
-## Task 2
+## data validation
 
-- [ ] Plan task 1
-  - [ ] Research
-  - [ ] Outline
-  - [ ] Gather resources
-- [ ] Plan task 1
-
-## Task 3
-
-- [ ] Plan task 1
-  - [ ] Research
-  - [ ] Outline
-  - [ ] Gather resources
-- [ ] Plan task 1
+- [ ] Research frontend vs backend validation
+  - [ ] implement the solution that doesn't sacrifice too much backend speed vs readability/ease of implementation
+  - [ ] plan out implementation

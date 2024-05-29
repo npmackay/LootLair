@@ -7,7 +7,7 @@ var validator = require("validator");
 const app = express();
 const createTables = require("./tableCreation.js");
 // const createExampleUserData = require("./testData/testUserData.js");
-// const createMarketPlaceData = require("./testData/testMarketplaceData.js");
+const createMarketPlaceData = require("./testData/testMarketplaceData.js");
 // const fillGamesTable = require("./dbQueries/supportedGames.js");
 const { getAllOtherUserItems } = require("./dbQueries/marketPlaceQueries");
 // Assuming `db` is your sqlite3 database instance
@@ -47,7 +47,6 @@ let db = new sqlite3.Database("./database.db", (err) => {
 });
 
 // createExampleUserData(db);
-// createMarketPlaceData(db);
 
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;

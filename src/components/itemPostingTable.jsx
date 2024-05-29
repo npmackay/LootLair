@@ -42,14 +42,23 @@ export default function ItemPostingTable({ items }) {
   };
 
   return (
-    <Table sx={{ backgroundColor: "white" }}>
+    <Table
+      sx={{
+        backgroundColor: "#F3F4F6",
+        borderRadius: "8px",
+        overflow: "hidden",
+      }}
+    >
       <TableHead>
         <TableRow>
           <TableCell
             sx={{
               textAlign: "center",
-              backgroundColor: "#0e0e0f",
+              backgroundColor: "#1E0342",
               color: "white",
+              fontWeight: "bold",
+              fontSize: "26px",
+              borderRight: "1px solid #D1D5DB",
             }}
           >
             Title
@@ -57,8 +66,11 @@ export default function ItemPostingTable({ items }) {
           <TableCell
             sx={{
               textAlign: "center",
-              backgroundColor: "#0e0e0f",
+              backgroundColor: "#1E0342",
               color: "white",
+              fontWeight: "bold",
+              fontSize: "26px",
+              borderRight: "1px solid #D1D5DB",
             }}
           >
             Description
@@ -66,8 +78,11 @@ export default function ItemPostingTable({ items }) {
           <TableCell
             sx={{
               textAlign: "center",
-              backgroundColor: "#0e0e0f",
+              backgroundColor: "#1E0342",
               color: "white",
+              fontWeight: "bold",
+              fontSize: "26px",
+              borderRight: "1px solid #D1D5DB",
             }}
           >
             Price
@@ -75,8 +90,11 @@ export default function ItemPostingTable({ items }) {
           <TableCell
             sx={{
               textAlign: "center",
-              backgroundColor: "#0e0e0f",
+              backgroundColor: "#1E0342",
               color: "white",
+              fontWeight: "bold",
+              fontSize: "26px",
+              borderRight: "1px solid #D1D5DB",
             }}
           >
             Status
@@ -84,17 +102,19 @@ export default function ItemPostingTable({ items }) {
           <TableCell
             sx={{
               textAlign: "center",
-              backgroundColor: "#0e0e0f",
+              backgroundColor: "#1E0342",
               color: "white",
+              fontWeight: "bold",
+              fontSize: "26px",
             }}
           >
             Seller
           </TableCell>
-          <TableCell sx={{ backgroundColor: "#0e0e0f" }} />
+          <TableCell sx={{ backgroundColor: "#1E0342" }} />
         </TableRow>
       </TableHead>
 
-      <TableBody sx={{ textAlign: "center", color: "white" }} items={items}>
+      <TableBody sx={{ textAlign: "center", color: "#111827" }} items={items}>
         {items
           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           .map((item) => (
@@ -117,7 +137,7 @@ export default function ItemPostingTable({ items }) {
                 >
                   <FaGavel
                     style={{
-                      color: "#0e0e0f",
+                      color: "#111827",
                       transform: "rotate(270deg)",
                     }}
                   />
@@ -135,6 +155,12 @@ export default function ItemPostingTable({ items }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          backgroundColor: "#F3F4F6",
+          borderTop: "1px solid #D1D5DB",
+          borderBottomLeftRadius: "8px",
+          borderBottomRightRadius: "8px",
+        }}
       />
 
       {openPurchaseItemModal && (
