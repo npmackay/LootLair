@@ -50,6 +50,10 @@ let db = new sqlite3.Database("./database.db", (err) => {
 
 app.get("/getUserBalance/:userId", (req, res) => {
   const { userId } = req.params;
+  if (!validator.isNumeric(userId)) {
+    return res.status(400).json({ message: "Invalid userId" });
+  }
+
   db.get(
     "SELECT balance FROM userBalance WHERE userId = ?",
     [userId],
@@ -65,6 +69,11 @@ app.get("/getUserBalance/:userId", (req, res) => {
 
 app.get("/marketplace/:game", (req, res) => {
   const { game } = req.params.toLowerCase().replace(/_/g, "");
+
+  if (!validator.isAlphanumeric(game)) {
+    return res.status(400).json({ message: "Invalid game title" });
+  }
+
   console.log(game);
   db.all(
     "SELECT itemPostings.*, users.username AS sellerName FROM itemPostings JOIN users ON itemPostings.sellerId = users.id WHERE gameId IN (SELECT id FROM games WHERE title = ?)",
@@ -80,8 +89,13 @@ app.get("/marketplace/:game", (req, res) => {
 
 app.post("/addBalance", (req, res) => {
   const { userId, amount } = req.body;
+
   console.log(userId, amount);
-  console.log("addBalance hit");
+
+  if (!validator.isNumeric(userId) || !validator.isNumeric(amount)) {
+    return res.status(400).json({ message: "Invalid userId or amount" });
+  }
+
   db.run(
     `UPDATE userBalance SET balance = balance + ? WHERE userId = ?`,
     [amount, userId],
@@ -112,9 +126,14 @@ app.post("/addBalance", (req, res) => {
 
 app.post("/purchaseItem", (req, res) => {
   const { buyerId, sellerId, amount, transactionType } = req.body;
-  console.log("purchaseItem hit");
-
-  console.log("purchaseItem route hit");
+  if (
+    !validator.isNumeric(buyerId) ||
+    !validator.isNumeric(sellerId) ||
+    !validator.isNumeric(amount) ||
+    !validator.isAlpha(transactionType)
+  ) {
+    return res.status(400).json({ message: "Invalid input data" });
+  }
   db.run(
     `INSERT INTO transactions(buyerId, sellerId, amount, transaction_type, created_at) VALUES(?, ?, ?, ?, datetime('now'))`,
     [buyerId, sellerId, amount, transactionType],
@@ -149,11 +168,9 @@ app.post("/purchaseItem", (req, res) => {
 });
 app.post("/createUserBalance", (req, res) => {
   const { userId, balance } = req.body;
-  validator.isNumeric(userId);
-  validator.isNumeric(balance);
-  validator.isInt(userId);
-  validator.isInt(balance);
-
+  if (!validator.isNumeric(userId) || !validator.isNumeric(balance)) {
+    return res.status(400).json({ message: "Invalid userId or balance" });
+  }
   db.run(
     "INSERT INTO userBalance (userId, balance) VALUES (?, ?)",
     [userId, balance],
@@ -227,6 +244,13 @@ app.post("/createUser", async (req, res) => {
 app.get("/login", async (req, res) => {
   const { username, password } = req.query;
 
+  if (
+    !validator.isAlphanumeric(username) ||
+    !validator.isAlphanumeric(password)
+  ) {
+    return res.status(400).json({ message: "Invalid username or password" });
+  }
+
   db.get(
     `SELECT id, password FROM users WHERE username = ?`,
     [username],
@@ -267,6 +291,10 @@ app.get("/login", async (req, res) => {
 app.get("/getItemPostings/:userId", (req, res) => {
   const { userId } = req.params;
 
+  if (!validator.isNumeric(userId)) {
+    return res.status(400).json({ message: "Invalid userId" });
+  }
+
   getAllOtherUserItems(db, userId).then((data) => {
     res.send(data);
   });
@@ -303,6 +331,7 @@ app.post(
 
 app.get("/getProfilePicture/:userId", (req, res) => {
   const { userId } = req.params;
+
   db.get(
     `SELECT image_route FROM profilePictures WHERE userId = ?`,
     [userId],
@@ -318,6 +347,9 @@ app.get("/getProfilePicture/:userId", (req, res) => {
 });
 app.get("/getUserName/:userId", (req, res) => {
   const { userId } = req.params;
+  if (!validator.isNumeric(userId)) {
+    return res.status(400).json({ message: "Invalid userId" });
+  }
   db.get(`SELECT username FROM users WHERE id = ?`, [userId], (err, row) => {
     if (err) {
       return console.log(err.message);
@@ -328,6 +360,14 @@ app.get("/getUserName/:userId", (req, res) => {
 app.post("/createItemPosting", (req, res) => {
   const { sellerId, title, description, price } = req.body;
   console.log(sellerId, title, description, price);
+  if (
+    !validator.isNumeric(sellerId) ||
+    !validator.isAlpha(title) ||
+    !validator.isAlpha(description) ||
+    !validator.isNumeric(price)
+  ) {
+    return res.status(400).json({ message: "Invalid input data" });
+  }
 
   db.run(
     `INSERT INTO itemPostings( sellerId, itemStatus, title, description, price, created_at) VALUES(?,'available', ?, ? , ?,datetime('now'))`,
