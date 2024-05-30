@@ -2,6 +2,15 @@
 
 LootLair is a marketplace application where users can post and purchase items related to various games. The application provides a user-friendly interface for browsing items, posting new items, and managing user profiles.
 
+
+## Getting Started
+
+To get started with the project, clone the repository and install the dependencies using `npm install`. Then, you can run the frontend using `npm run frontend` and the backend using `npm run backend`.
+
+You can create you own data using the marketplace feature on use the included test data functions will fill the database with test data.
+For more details, please refer to the individual files and components.
+
+
 ## Tech Stack
 
 LootLair is built using a combination of popular and powerful libraries and frameworks. Here's a brief overview of the main technologies used:
@@ -30,9 +39,3 @@ LootLair is built using a combination of popular and powerful libraries and fram
 - `Nodemon`: A utility that will monitor for any changes in your source and automatically restart your server. It's used for improving the development experience.
 - `Validator`: A powerful npm package that provides a set of validation functions for validating various types of data, such as strings, numbers, emails, URLs, and more. It's commonly used in web applications to ensure that user input meets specific criteria and is valid before processing or storing it.
 
-## Getting Started
-
-To get started with the project, clone the repository and install the dependencies using `npm install`. Then, you can run the frontend using `npm run frontend` and the backend using `npm run backend`.
-
-You can create you own data using the marketplace feature on use the included test data functions will fill the database with test data.
-For more details, please refer to the individual files and components.
