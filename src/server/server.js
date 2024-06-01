@@ -26,9 +26,11 @@ const storage = multer.diskStorage({
     cb(null, "./src/LootLairStorage/userProfilePicture");
   },
   filename: function (req, file, cb) {
-    cb(null, req.body.userId + "pp" + path.extname(file.originalname));
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + Date.now() + ext);
   },
 });
+
 const upload = multer({ storage: storage });
 app.use(morgan(":url :response-time ms"));
 app.use(
@@ -306,7 +308,7 @@ app.post(
   (req, res) => {
     // req.file is the `profilePicture` file
     // req.body will hold the text fields, if there were any
-    console.log("hit here");
+    console.log(req.file, req.body, "file uploaded successfully");
     // Save the file path to the database
     const filePath = path.join(
       "src",
@@ -315,33 +317,58 @@ app.post(
       req.file.filename
     );
 
-    // Save the file path to the profilePictures table
-    db.run(
-      `INSERT INTO profilePictures(userId, image_route, created_at, updated_at) VALUES(?, ?, datetime('now'), datetime('now'))`,
-      [req.body.userId, filePath],
-      function (err) {
+    console.log(req.body, filePath);
+
+    // Check if the user already has a profile picture
+    db.get(
+      `SELECT * FROM profilePictures WHERE userId = ?`,
+      [req.body.userId],
+      (err, row) => {
         if (err) {
           return console.log(err.message);
         }
-        res.send("Profile picture uploaded and saved successfully");
+        if (row) {
+          // Update the existing profile picture
+          db.run(
+            `UPDATE profilePictures SET image_route = ?, updated_at = datetime('now') WHERE userId = ?`,
+            [filePath, req.body.userId],
+            function (err) {
+              if (err) {
+                return console.log(err.message);
+              }
+              res.send("Profile picture updated successfully");
+            }
+          );
+        } else {
+          // Insert a new profile picture
+          db.run(
+            `INSERT INTO profilePictures(userId, image_route, created_at, updated_at) VALUES(?, ?, datetime('now'), datetime('now'))`,
+            [req.body.userId, filePath],
+            function (err) {
+              if (err) {
+                return console.log(err.message);
+              }
+              res.send("Profile picture uploaded and saved successfully");
+            }
+          );
+        }
       }
     );
   }
 );
-
-app.get("/getProfilePicture/:userId", (req, res) => {
+app.get("/getUserProfilePicture/:userId", (req, res) => {
   const { userId } = req.params;
-
+  if (!validator.isNumeric(userId)) {
+    return res.status(400).json({ message: "Invalid userId" });
+  }
   db.get(
     `SELECT image_route FROM profilePictures WHERE userId = ?`,
     [userId],
     (err, row) => {
       if (err) {
         return console.log(err.message);
-      } else {
-        const filePath = row.image_route;
-        res.sendFile(filePath);
       }
+      res.send(row);
     }
   );
 });

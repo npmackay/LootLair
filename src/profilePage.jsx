@@ -14,6 +14,8 @@ import { useCurrentUser } from "./components/contexts/currentUserContext";
 function ProfilePage() {
   const { currentUser } = useCurrentUser();
   const [user, setUser] = useState(currentUser);
+  const [userProfilePictureSrc, setUserProfilePictureSrc] = useState("");
+
   const URL = "http://localhost:3001";
   async function uploadUserProfilePicture() {
     const fileInput = document.createElement("input");
@@ -24,8 +26,9 @@ function ProfilePage() {
         const file = e.target.files[0];
         const formData = new FormData();
         formData.append("profilePicture", file);
-        formData.append("userId", JSON.stringify({ userId: currentUser.id }));
-
+        formData.append("userId", currentUser.userId);
+        formData.append("fileName", file.name);
+        console.log(JSON.stringify(formData));
         // Send the image file to your server
         const response = await fetch(URL + "/uploadProfilePicture", {
           method: "POST",
@@ -51,25 +54,20 @@ function ProfilePage() {
   }
 
   useEffect(() => {
-    async function fetchUserProfilePicture() {
-      let userProfilePictureSrc = await fetch(
-        URL + `/getUserProfilePicture?${user.userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      ).then((response) => response.json());
-      userProfilePictureSrc.then((data) => {
-        setUser((prevUser) => ({
-          ...prevUser,
-          profilePicture: data.profilePicture,
-        }));
-      });
-    }
+    const fetchUserProfilePicture = async () => {
+      const response = await fetch(
+        URL + "/getUserProfilePicture/" + currentUser.userId
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfilePictureSrc(data.image_route);
+      } else {
+        console.error("Failed to fetch user profile picture");
+      }
+    };
+
     fetchUserProfilePicture();
-  }, [currentUser]);
+  }, []);
 
   return (
     <>
@@ -89,10 +87,24 @@ function ProfilePage() {
             }}
             elevation={10}
           >
-            <Typography sx={{ marginBottom: "2rem" }} variant="h4">
-              User Profile
-            </Typography>
-
+            <div style={{ display: "flex " }}>
+              <Typography sx={{ marginBottom: "2rem" }} variant="h4">
+                User Profile
+              </Typography>
+              <Box
+                component="img"
+                alt="profile picture"
+                src={userProfilePictureSrc}
+                sx={{ borderRadius: "5rem", width: "100px", height: "100px" }}
+              />
+              <IconButton
+                onClick={() => {
+                  uploadUserProfilePicture();
+                }}
+              >
+                <FaUpload />
+              </IconButton>
+            </div>
             <Box sx={{ width: "100%", marginBottom: "1rem" }}>
               <Typography>Username : {user?.username}</Typography>
               <TextField
@@ -129,19 +141,6 @@ function ProfilePage() {
             >
               <Paper>
                 <Typography variant="h4">Public Profile</Typography>
-                <Box
-                  component="img"
-                  alt="profile picture"
-                  src={user?.profilePicture}
-                  sx={{ width: "10rem", height: "10rem" }}
-                ></Box>
-                <IconButton
-                  onClick={() => {
-                    uploadUserProfilePicture();
-                  }}
-                >
-                  <FaUpload />
-                </IconButton>
               </Paper>
             </Grid>
           </Paper>
