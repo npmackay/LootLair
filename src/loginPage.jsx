@@ -17,6 +17,7 @@ function LoginPage() {
   const [style, setStyle] = useState({});
   const URL = "http://localhost:3001";
   const handleLogin = async () => {
+    console.log("in here");
     const response = await fetch(
       URL + "/login?username=" + username + "&password=" + password
     );
@@ -57,7 +58,6 @@ function LoginPage() {
       },
       body: JSON.stringify({ username, password }),
     });
-
     const data = await response.json(); // Parse the response body as JSON
     if (data.message === "user already exists") {
       toast.error("user already exists");
@@ -66,6 +66,7 @@ function LoginPage() {
     } else {
       toast.error("Failed to create account");
     }
+    handleLogin();
   };
 
   useEffect(() => {
