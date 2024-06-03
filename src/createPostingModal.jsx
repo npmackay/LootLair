@@ -4,7 +4,7 @@ import { useCurrentUser } from "./components/contexts/currentUserContext";
 function CreatePostingModal(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState();
   const { currentUser: user } = useCurrentUser();
   function submitPosting() {
     console.log("submitting posting");
@@ -18,7 +18,7 @@ function CreatePostingModal(props) {
         sellerId: user.userId,
         title: title,
         description: description,
-        price: price,
+        price: parseInt(price),
         itemStatus: "available",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),

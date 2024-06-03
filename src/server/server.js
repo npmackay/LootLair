@@ -386,7 +386,7 @@ app.get("/getUserName/:userId", (req, res) => {
 });
 app.post("/createItemPosting", (req, res) => {
   const { sellerId, title, description, price } = req.body;
-  console.log(sellerId, title, description, price);
+  console.log(typeof sellerId, typeof title, typeof description, typeof price);
   if (
     !validator.isNumeric(sellerId) ||
     !validator.isAlpha(title) ||
